@@ -24,7 +24,7 @@ author:
   # Biographic information
   avatar           : "profile.png"
   name             : "Weizhong Wang"
-  pronouns         : "he/his" # example: "she/her"  
+  pronouns         :  # example: "she/her"  
   bio              : "Mathematics and Applied Mathematics, Fudan University"
   location         : "Shanghai, China"
   employer         : "Fudan University"
