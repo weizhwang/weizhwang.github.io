@@ -39,7 +39,13 @@
       "startDate": "",
       "endDate": "2026",
       "gpa": null,
-      "courses": [Mathematical Statistics, Probability, Functional Analysis (Honor), Optimization, Topology]
+      "courses": [
+    "Mathematical Statistics",
+    "Probability",
+    "Functional Analysis (Honor)",
+    "Optimization",
+    "Topology"
+    ]
     },
     {
       "institution": "GitHub University",
