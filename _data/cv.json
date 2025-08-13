@@ -48,7 +48,7 @@
     ]
     },
   ],
-  "skills": [Python, LATEX, Matlab, C++],
-  "languages": [Chinese (native), English (fluent)],
-  "interests": [football, ACG, travelling],
+  "skills": ["Python", "LATEX", "Matlab", "C++"],
+  "languages": ["Chinese (native)", "English (fluent)"],
+  "interests": ["football", "ACG", "travelling"],
 }
