@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Hello!"
+title: "Weizhong Wang"
 author_profile: true
 redirect_from: 
   - /about/
