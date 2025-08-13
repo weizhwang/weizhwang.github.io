@@ -11,54 +11,30 @@ redirect_from:
 
 Education
 ======
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
-* M.S. in Jekyll, GitHub University, 2014
-* B.S. in GitHub, GitHub University, 2012
+* B.S. in Fudan University, Shanghai, China, 2026 (expected)
 
-Work experience
+Research experience
 ======
-* Spring 2024: Academic Pages Collaborator
-  * GitHub University
-  * Duties includes: Updates and improvements to template
-  * Supervisor: The Users
+* 2024/12 - present: Research Assistant
+  * Northwestern University, Illinois, USA
+  * Duties includes: improving convergence rate of Graph Laplacian
+  * Supervisor: Prof. Yiping Lu
 
-* Fall 2015: Research Assistant
-  * GitHub University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
+* 2025/03 - present: Research Assistant
+  * Columbia University, New York, USA
+  * Duties included: deal with singularity of score function in diffusion model
+  * Supervisor: Prof. Kaizheng Wang
 
-* Summer 2015: Research Assistant
+* 2025/08 - ?: Research Assistant
   * GitHub University
   * Duties included: Tagging issues
   * Supervisor: Professor Git
   
 Skills
 ======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
+* Python, LATEX, Matlab, C++
 
-Publications
+Hobbies
 ======
-  <ul>{% for post in site.publications reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Talks
-======
-  <ul>{% for post in site.talks reversed %}
-    {% include archive-single-talk-cv.html  %}
-  {% endfor %}</ul>
-  
-Teaching
-======
-  <ul>{% for post in site.teaching reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Service and leadership
-======
-* Currently signed in to 43 different slack teams
+* football, ACG, travelling
+
