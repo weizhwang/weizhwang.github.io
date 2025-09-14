@@ -19,16 +19,21 @@ Research experience
   * Northwestern University, Illinois, USA
   * Duties includes: improving convergence rate of Graph Laplacian
   * Supervisor: Prof. Yiping Lu
+ 
+* 2025/08 - present: Research Assistant
+  * Northwestern University, Illinois, USA
+  * Duties includes: combining particle filtering with diffusion process
+  * Supervisor: Prof. Yiping Lu
 
-* 2025/03 - present: Research Assistant
+* 2025/03 - 2025/08: Research Assistant
   * Columbia University, New York, USA
   * Duties included: deal with singularity of score function in diffusion model
   * Supervisor: Prof. Kaizheng Wang
 
-* 2025/08 - ?: Research Assistant
-  * GitHub University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
+* 2025/08 - present: Research Assistant
+  * Princeton University, New Jersey, USA
+  * Duties includes: paper writing and theoretical analysis
+  * Supervisor: Jiacheng Guo
   
 Skills
 ======
