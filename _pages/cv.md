@@ -29,7 +29,7 @@ Research experience
   * Columbia University, New York, USA
   * Duties included: deal with singularity of score function in diffusion model
   * Supervisor: Prof. Kaizheng Wang
-  * Technical Note: [[Note]](./files/technical_note_on_diffusion_model.pdf)
+  * Technical Note: [[Note]](https://github.com/weizhwang/wzwang.github.io/blob/master/files/technical_note_on_diffusion_model.pdf)
 
 * 2025/08 - present: Research Assistant
   * Princeton University, New Jersey, USA
