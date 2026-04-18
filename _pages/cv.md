@@ -22,12 +22,12 @@ Research experience
  
 * 2025/08 - present: Research Assistant
   * Northwestern University, Evanston, IL
-  * Duties includes: combining particle filtering with diffusion process
+  * Duties includes: laying theoretical foundations for our algorithm with Sequential Monte Carlo framework
   * Supervisor: Prof. Yiping Lu
 
 * 2025/03 - 2025/08: Research Assistant
   * Columbia University, New York, NY
-  * Duties included: deal with singularity of score function in diffusion model
+  * Duties included: dealing with singularity of score function in diffusion model
   * Supervisor: Prof. Kaizheng Wang
   
 Skills
