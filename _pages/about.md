@@ -7,6 +7,4 @@ redirect_from:
   - /about.html
 ---
 
-Welcome to my homepage! I am a first-year PhD in Industrial Engineering & Operations Research, Columbia University. I study diffusion processes. I am fortunate to be advised by [Prof. Yiping Lu](https://2prime.github.io/) and [Prof. Kaizheng Wang](https://kw2934.github.io/).
-
-I am also deeply grateful to [Prof. Yingzhou Li](https://yingzhouli.com/) for his generous guidance and support throughout my academic journey.
+Welcome to my homepage! I am a senior majoring in Mathematics and Applied Mathematics at Fudan University. My research lies at the intersection of applied probability and statistics, control and (stochastic) differential equations. During my undergraduate, I was fortunate to be advised by [Prof. Yiping Lu](https://2prime.github.io/) and [Prof. Kaizheng Wang](https://kw2934.github.io/). I am also deeply grateful to [Prof. Yingzhou Li](https://yingzhouli.com/) for his generous guidance and support throughout my academic journey. Starting from Fall 2026, I will begin to pursue a PhD in Industrial Engineering & Operations Research, Columbia University.
