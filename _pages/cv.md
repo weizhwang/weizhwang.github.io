@@ -16,25 +16,19 @@ Education
 Research experience
 ======
 * 2024/12 - present: Research Assistant
-  * Northwestern University, Illinois, USA
+  * Northwestern University, Evanston, IL
   * Duties includes: improving convergence rate of Graph Laplacian
   * Supervisor: Prof. Yiping Lu
  
 * 2025/08 - present: Research Assistant
-  * Northwestern University, Illinois, USA
+  * Northwestern University, Evanston, IL
   * Duties includes: combining particle filtering with diffusion process
   * Supervisor: Prof. Yiping Lu
 
 * 2025/03 - 2025/08: Research Assistant
-  * Columbia University, New York, USA
+  * Columbia University, New York, NY
   * Duties included: deal with singularity of score function in diffusion model
   * Supervisor: Prof. Kaizheng Wang
-  * Technical Note: [[Note]](https://github.com/weizhwang/wzwang.github.io/blob/master/files/technical_note_on_diffusion_model.pdf)
-
-* 2025/08 - present: Research Assistant
-  * Princeton University, New Jersey, USA
-  * Duties includes: paper writing and theoretical analysis
-  * Supervisor: Jiacheng Guo
   
 Skills
 ======
@@ -42,5 +36,5 @@ Skills
 
 Hobbies
 ======
-* football, ACG, travelling
+* football, history, travelling
 
