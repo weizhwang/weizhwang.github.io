@@ -11,16 +11,17 @@ redirect_from:
 
 Education
 ======
-* B.S. in Fudan University, Shanghai, China, 2026 (expected)
+* B.S. in Fudan University, Shanghai, China, 2026
+* Ph.D. in Columbia University, New York, USA, 2030
 
 Research experience
 ======
-* 2024/12 - present: Research Assistant
+* 2025/02 - 2026/03: Research Assistant
   * Northwestern University, Evanston, IL
   * Duties includes: improving convergence rate of Graph Laplacian
   * Supervisor: Prof. Yiping Lu
  
-* 2025/08 - present: Research Assistant
+* 2025/08 - 2026/01: Research Assistant
   * Northwestern University, Evanston, IL
   * Duties includes: laying theoretical foundations for our algorithm with Sequential Monte Carlo framework
   * Supervisor: Prof. Yiping Lu
