@@ -42,10 +42,11 @@ I received my B.S. in Mathematics and Applied Mathematics from Fudan University.
 <li><h3>Foundations</h3><p>Applied probability, stochastic control, SDEs</p></li>
 </ul>
 <div class="research__art" aria-hidden="true">
-<img class="art-light" src="{{ base_path }}/images/landscape-light.svg?v={{ site.time | date: "%s" }}" alt="" width="398" height="210">
-<img class="art-dark" src="{{ base_path }}/images/landscape-dark.svg?v={{ site.time | date: "%s" }}" alt="" width="398" height="210">
+<img class="art-light" src="{{ base_path }}/images/landscape-light.svg?v={{ site.time | date: "%s" }}" alt="" width="398" height="222">
+<img class="art-dark" src="{{ base_path }}/images/landscape-dark.svg?v={{ site.time | date: "%s" }}" alt="" width="398" height="222">
 </div>
 </div>
+<script src="{{ base_path }}/assets/js/bowl.js?v={{ site.time | date: "%s" }}" defer></script>
 </section>
 
 <section class="section">

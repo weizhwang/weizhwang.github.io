@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
-"""Draw the homepage art: a ball rolling down a convex loss landscape to its minimum.
+"""Draw the homepage art: a convex loss landscape for a ball to roll down to its minimum.
 
     python3 scripts/make_landscape.py    # writes images/landscape-light.svg and images/landscape-dark.svg
 
 The page shows one of the two files depending on the site theme (see assets/css/site.css).
+The ball is not part of the picture: assets/js/bowl.js rolls it over the bowl in the page,
+using the geometry this script writes into that file.
 """
+import json
 import math
+import re
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
 
 PALETTES = {
     # on the light theme's white page; line = the site's accent colour
-    "light": dict(fill_low="#cddbf7", fill_high="#ffffff", back="#eef3fb", line="#2257c9",
-                  ball0="#ffd9bd", ball1="#f47b30", ball2="#b4460b", trail="#ea6a1c",
-                  shadow="#0b2a5b", shadow_op=0.28),
+    "light": dict(fill_low="#cddbf7", fill_high="#ffffff", back="#eef3fb", line="#2257c9"),
     # on the dark theme's #0e1117 page
-    "dark": dict(fill_low="#1c2c4c", fill_high="#0e1117", back="#151b25", line="#7aaaff",
-                 ball0="#ffe1c9", ball1="#ff9a4d", ball2="#c25510", trail="#ffa657",
-                 shadow="#000000", shadow_op=0.55),
+    "dark": dict(fill_low="#1c2c4c", fill_high="#0e1117", back="#151b25", line="#7aaaff"),
 }
 
 # --------------------------------------------------------------------- bowl
@@ -26,6 +28,7 @@ FADE = (0.86, 1.02)                     # the edge fade, in radii of the r = 1 l
 AZ, EL = math.radians(-8), math.radians(40)
 TO_CAM = (-math.cos(EL) * math.sin(AZ), -math.cos(EL) * math.cos(AZ), math.sin(EL))
 BALL_R = 10.0
+R_START = 0.92                          # the ball starts at most this far out
 MARGIN = 6.0
 
 
@@ -52,34 +55,12 @@ def polar(r, th):
     return x, y, height(x, y)
 
 
-def roll(seconds=5.0, samples=150):
-    """Heavy-ball dynamics on the bowl, released at rest near the rim."""
-    th0 = math.radians(163)
-    x, y = 0.93 * A * math.cos(th0), 0.93 * B * math.sin(th0)
-    vx = vy = 0.0
-    k = 0.5 * (2 * math.pi * A / 1.15) ** 2   # period 1.15 s along the long axis
-    gamma, dt = 1.25, 1e-3
-    steps = int(seconds / dt)
-    every = steps // (samples - 1)
-    path = [(x, y)]
-    for i in range(1, steps + 1):
-        ax = -2 * k * x / (A * A) - gamma * vx
-        ay = -2 * k * y / (B * B) - gamma * vy
-        vx += ax * dt
-        vy += ay * dt
-        x += vx * dt
-        y += vy * dt
-        if i % every == 0:
-            path.append((x, y))
-    return path[:samples]
-
-
-def frame(path):
-    """Bounding box of everything visible: the faded rim, the bottom and the ball."""
+def frame():
+    """Bounding box of everything visible: the faded rim, the bottom and the ball wherever it starts."""
     pts = [project(*polar(FADE[1], 2 * math.pi * j / 360)) for j in range(360)]
     pts.append(project(0.0, 0.0, 0.0))
-    for x, y in path:
-        px, py = project(x, y, height(x, y))
+    for j in range(360):
+        px, py = project(*polar(R_START, 2 * math.pi * j / 360))
         pts += [(px - BALL_R, py - 2 * BALL_R), (px + BALL_R, py + BALL_R)]
     x0, y0 = min(p[0] for p in pts) - MARGIN, min(p[1] for p in pts) - MARGIN
     x1, y1 = max(p[0] for p in pts) + MARGIN, max(p[1] for p in pts) + MARGIN
@@ -164,8 +145,7 @@ def visible_runs(points):
 
 def svg(theme):
     P = PALETTES[theme]
-    path = roll()
-    vx, vy, vw, vh = frame(path)
+    vx, vy, vw, vh = frame()
     box = f'x="{num(vx)}" y="{num(vy)}" width="{num(vw)}" height="{num(vh)}"'
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{num(vx)} {num(vy)} {num(vw)} {num(vh)}" '
          f'width="{num(vw)}" height="{num(vh)}" aria-hidden="true">']
@@ -181,10 +161,6 @@ def svg(theme):
              f'</radialGradient>'
              f'<mask id="fade" maskUnits="userSpaceOnUse" {box}>'
              f'<rect {box} fill="url(#edge)"/></mask>'
-             f'<radialGradient id="ball" cx=".36" cy=".32" r=".75">'
-             f'<stop offset="0" stop-color="{P["ball0"]}"/><stop offset=".45" stop-color="{P["ball1"]}"/>'
-             f'<stop offset="1" stop-color="{P["ball2"]}"/></radialGradient>'
-             f'<filter id="soft" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="2"/></filter>'
              f'</defs>')
 
     # the landscape: a softly shaded surface with its level sets and meridians as fine lines,
@@ -206,60 +182,30 @@ def svg(theme):
         for run in visible_runs(spoke):
             o.append(f'<path d="{poly_d(run)}" stroke-width=".7" stroke-opacity=".3"/>')
     o.append("</g></g>")
-
-    # the ball: heavy-ball dynamics, a trail revealed in step with it, and its shadow
-    contact = [project(x, y, height(x, y)) for x, y in path]
-    seg = [math.dist(p, q) for p, q in zip(contact, contact[1:])]
-    total = sum(seg)
-    cum = [0.0]
-    for s in seg:
-        cum.append(cum[-1] + s)
-    key_points = ";".join(num(cv / total, 4) for cv in cum)
-    key_times = ";".join(num(i / (len(contact) - 1), 4) for i in range(len(contact)))
-    dash_vals = ";".join(num(1 - cv / total, 4) for cv in cum)
-    T = 5.0
-    fx, fy = contact[-1]
-    rel = poly_d([(x - fx, y - fy) for x, y in contact])
-    motion = (f'<animateMotion dur="{T}s" fill="freeze" calcMode="linear" path="{rel}" '
-              f'keyPoints="{key_points}" keyTimes="{key_times}"/>')
-
-    trail_d = poly_d(contact)
-    o.append(f'<mask id="reveal" maskUnits="userSpaceOnUse" {box}>'
-             f'<path d="{trail_d}" pathLength="1" fill="none" stroke="#fff" stroke-width="12" '
-             f'stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="0">'
-             f'<animate attributeName="stroke-dashoffset" dur="{T}s" fill="freeze" calcMode="linear" '
-             f'values="{dash_vals}" keyTimes="{key_times}"/></path></mask>')
-    o.append(f'<path d="{trail_d}" fill="none" stroke="{P["trail"]}" stroke-width="2.2" stroke-opacity=".8" '
-             f'stroke-dasharray="2 5" stroke-linecap="round" stroke-linejoin="round" mask="url(#reveal)"/>')
-
-    # ripple at the minimum once the ball has arrived
-    rx0, ry0 = 9.0, 9.0 * math.sin(EL)
-    o.append(f'<ellipse cx="{num(fx)}" cy="{num(fy)}" rx="{num(rx0)}" ry="{num(ry0)}" fill="none" '
-             f'stroke="{P["trail"]}" stroke-width="1.6" opacity="0">'
-             f'<animate attributeName="rx" values="{num(rx0)};{num(rx0 * 3.2)}" dur="2.6s" begin="{T}s" '
-             f'repeatCount="indefinite"/>'
-             f'<animate attributeName="ry" values="{num(ry0)};{num(ry0 * 3.2)}" dur="2.6s" begin="{T}s" '
-             f'repeatCount="indefinite"/>'
-             f'<animate attributeName="opacity" values=".65;0" dur="2.6s" begin="{T}s" '
-             f'repeatCount="indefinite"/></ellipse>')
-    o.append(f'<g transform="translate({num(fx)} {num(fy)})">{motion}'
-             f'<ellipse cx="0" cy="1" rx="{num(BALL_R * 1.05)}" ry="{num(BALL_R * 0.42)}" fill="{P["shadow"]}" '
-             f'opacity="{P["shadow_op"]}" filter="url(#soft)"/></g>')
-    o.append(f'<g transform="translate({num(fx)} {num(fy - BALL_R + 0.5)})">{motion}'
-             f'<circle r="{BALL_R}" fill="url(#ball)"/></g>')
     o.append("</svg>")
     return "\n".join(o) + "\n"
 
 
+def write_geometry():
+    """Copy the bowl's geometry into the page script that rolls the ball."""
+    js = ROOT / "assets" / "js" / "bowl.js"
+    geometry = dict(A=A, B=B, DEPTH=DEPTH, AZ=round(math.degrees(AZ), 6), EL=round(math.degrees(EL), 6),
+                    R_MAX=R_MAX, R_START=R_START, BALL_R=BALL_R, VIEW=[float(num(v)) for v in frame()])
+    text, n = re.subn(r"(// BEGIN geometry[^\n]*\n).*?(\n[ \t]*// END geometry)",
+                      lambda m: m.group(1) + "  var G = " + json.dumps(geometry) + ";" + m.group(2),
+                      js.read_text(), flags=re.S)
+    if n != 1:
+        raise SystemExit(f"no geometry block in {js}")
+    js.write_text(text)
+    return js
+
+
 def main():
-    out = Path(__file__).resolve().parent.parent / "images"
-    blocked = sum(hidden(x, y, height(x, y) + BALL_R) for x, y in roll())
-    if blocked:
-        print(f"warning: the ball is hidden behind the rim at {blocked} samples")
     for theme in PALETTES:
-        name = out / f"landscape-{theme}.svg"
+        name = ROOT / "images" / f"landscape-{theme}.svg"
         name.write_text(svg(theme))
         print("wrote", name, f"{name.stat().st_size / 1024:.0f} KB")
+    print("updated", write_geometry())
 
 
 if __name__ == "__main__":
