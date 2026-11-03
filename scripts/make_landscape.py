@@ -3,27 +3,27 @@
 
     python3 scripts/make_landscape.py    # writes images/landscape-light.svg and images/landscape-dark.svg
 
-The page shows one of the two files depending on the site theme (see _sass/_custom.scss).
+The page shows one of the two files depending on the site theme (see assets/css/site.css).
 """
 import math
 from pathlib import Path
 
 PALETTES = {
-    # on the light theme's white page
-    "light": dict(low="#2f6fd6", high="#eaf2fd", ring="#ffffff", ring_op=0.6,
-                  ball0="#ffd6b5", ball1="#f0762c", ball2="#b4460b", trail="#e8590c",
-                  shadow="#0b2a5b", shadow_op=0.3),
-    # on the dark theme's #22272e page
-    "dark": dict(low="#3d8bfd", high="#2c333c", ring="#ffffff", ring_op=0.14,
-                 ball0="#ffdfc4", ball1="#ff9a4d", ball2="#c25510", trail="#ffa657",
-                 shadow="#000000", shadow_op=0.5),
+    # on the light theme's white page; line = the site's accent colour
+    "light": dict(fill_low="#cddbf7", fill_high="#ffffff", back="#eef3fb", line="#2257c9",
+                  ball0="#ffd9bd", ball1="#f47b30", ball2="#b4460b", trail="#ea6a1c",
+                  shadow="#0b2a5b", shadow_op=0.28),
+    # on the dark theme's #0e1117 page
+    "dark": dict(fill_low="#1c2c4c", fill_high="#0e1117", back="#151b25", line="#7aaaff",
+                 ball0="#ffe1c9", ball1="#ff9a4d", ball2="#c25510", trail="#ffa657",
+                 shadow="#000000", shadow_op=0.55),
 }
 
 # --------------------------------------------------------------------- bowl
-A, B, DEPTH = 190.0, 150.0, 65.0        # rim semi-axes and depth at r = 1 (world units)
+A, B, DEPTH = 190.0, 150.0, 80.0        # rim semi-axes and depth at r = 1 (world units)
 R_MAX = 1.1                             # the surface runs a little past r = 1 and fades out
 FADE = (0.86, 1.02)                     # the edge fade, in radii of the r = 1 level set
-AZ, EL = math.radians(-8), math.radians(32)
+AZ, EL = math.radians(-8), math.radians(40)
 TO_CAM = (-math.cos(EL) * math.sin(AZ), -math.cos(EL) * math.cos(AZ), math.sin(EL))
 BALL_R = 10.0
 MARGIN = 6.0
@@ -109,10 +109,10 @@ def poly_d(pts, close=False):
 
 
 def faces(P, nr=18, nt=72):
-    """Shaded mesh of the bowl, far to near. Rings sit at equal loss levels."""
+    """Softly shaded mesh of the bowl, far to near; the level sets are drawn on top."""
     rs = [R_MAX * math.sqrt(i / nr) for i in range(nr + 1)]
     ts = [2 * math.pi * j / nt for j in range(nt + 1)]
-    low, high = hex2rgb(P["low"]), hex2rgb(P["high"])
+    low, high = hex2rgb(P["fill_low"]), hex2rgb(P["fill_high"])
     light = (-0.5, 0.45, 0.74)
     out = []
     for i in range(nr):
@@ -126,9 +126,10 @@ def faces(P, nr=18, nt=72):
             norm = math.sqrt(sum(c * c for c in n))
             lam = max(0.0, sum(n[c] / norm * light[c] for c in range(3)))
             t = min(1.0, rm * rm) ** 0.7
-            front = sum(n[c] * TO_CAM[c] for c in range(3)) > 0
-            shade = (0.84 + 0.22 * lam) if front else 0.7       # back faces show the outside
-            fill = rgb2hex([c * shade for c in mix(low, high, t)])
+            if sum(n[c] * TO_CAM[c] for c in range(3)) > 0:
+                fill = rgb2hex([c * (0.93 + 0.1 * lam) for c in mix(low, high, t)])
+            else:
+                fill = P["back"]                                # the outside of the near rim
             d = sum(depth(*c) for c in corners) / 4
             out.append((d, [project(*c) for c in corners], fill))
     out.sort(key=lambda f: -f[0])
@@ -144,6 +145,21 @@ def hidden(x, y, z):
         if height(px, py) > pz + 0.5:
             return True
     return False
+
+
+def visible_runs(points):
+    """Split a polyline on the surface into the projected pieces the camera can see."""
+    runs, run = [], []
+    for p in points:
+        if hidden(*p):
+            if len(run) > 1:
+                runs.append(run)
+            run = []
+        else:
+            run.append(project(*p))
+    if len(run) > 1:
+        runs.append(run)
+    return runs
 
 
 def svg(theme):
@@ -171,21 +187,24 @@ def svg(theme):
              f'<filter id="soft" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="2"/></filter>'
              f'</defs>')
 
-    # the landscape: shaded mesh, level sets and a few spokes
+    # the landscape: a softly shaded surface with its level sets and meridians as fine lines,
+    # hidden where the near rim covers them
     o.append('<g mask="url(#fade)">')
     o.append('<g stroke-width=".6" stroke-linejoin="round">')
     for _, pts, fill in faces(P):
         o.append(f'<path d="{poly_d(pts, True)}" fill="{fill}" stroke="{fill}"/>')
     o.append("</g>")
-    o.append(f'<g fill="none" stroke="{P["ring"]}" stroke-opacity="{P["ring_op"]}">')
+    o.append(f'<g fill="none" stroke="{P["line"]}" stroke-linecap="round" stroke-linejoin="round">')
     for kk in range(1, 11):
         r = R_MAX * math.sqrt(kk / 10)
-        ring = [project(*polar(r, 2 * math.pi * j / 120)) for j in range(120)]
-        o.append(f'<path d="{poly_d(ring, True)}" stroke-width=".9"/>')
-    for kk in range(12):
-        th = 2 * math.pi * kk / 12
-        spoke = [project(*polar(R_MAX * i / 16, th)) for i in range(17)]
-        o.append(f'<path d="{poly_d(spoke)}" stroke-width=".6" stroke-opacity=".6"/>')
+        ring = [polar(r, 2 * math.pi * j / 240) for j in range(241)]
+        for run in visible_runs(ring):
+            o.append(f'<path d="{poly_d(run)}" stroke-width="1" stroke-opacity=".55"/>')
+    for kk in range(16):
+        th = 2 * math.pi * kk / 16
+        spoke = [polar(R_MAX * (0.12 + 0.88 * i / 40), th) for i in range(41)]
+        for run in visible_runs(spoke):
+            o.append(f'<path d="{poly_d(run)}" stroke-width=".7" stroke-opacity=".3"/>')
     o.append("</g></g>")
 
     # the ball: heavy-ball dynamics, a trail revealed in step with it, and its shadow

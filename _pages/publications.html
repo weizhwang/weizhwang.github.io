@@ -1,20 +1,21 @@
 ---
-layout: archive
+layout: site
 title: "Publications"
 permalink: /publications/
-author_profile: false
 ---
 
-{% if site.author.googlescholar %}
-  <p class="pub-note">See also my <a href="{{ site.author.googlescholar }}">Google Scholar profile</a>.</p>
-{% endif %}
+{% include base_path %}
 
-{% for category in site.publication_category %}
-  {% assign pubs = site.publications | where: "category", category[0] | reverse %}
-  {% if pubs.size > 0 %}
-    <h2>{{ category[1].title }}</h2>
-    {% for pub in pubs %}{% include pub-entry.html pub=pub %}{% endfor %}
-  {% endif %}
+<h1 class="page-title">Publications</h1>
+{% if site.author.googlescholar %}<p class="page-lead">See also my <a href="{{ site.author.googlescholar }}">Google Scholar profile</a>.</p>{% endif %}
+
+{% assign pubs = site.publications | sort: "date" | reverse %}
+{% assign years = pubs | group_by_exp: "pub", "pub.date | date: '%Y'" %}
+{% for year in years %}
+<section class="section">
+<h2 class="section__title">{{ year.name }}</h2>
+{% for pub in year.items %}{% include pub-entry.html pub=pub %}{% endfor %}
+</section>
 {% endfor %}
 
-<p class="pub-note">* Equal contribution</p>
+<p class="note">* Equal contribution</p>

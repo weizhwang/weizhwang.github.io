@@ -1,0 +1,42 @@
+---
+layout: site
+title: "CV"
+permalink: /cv/
+redirect_from:
+  - /resume
+---
+
+{% comment %} The entries live in _data/cv.yml. {% endcomment %}
+{% include base_path %}
+
+<div class="page-head">
+<h1 class="page-title">CV</h1>
+<a class="button" href="{{ base_path }}/files/Weizhong_Wang_CV.pdf">{% include icon.html name="download" %}PDF</a>
+</div>
+
+{% for section in site.data.cv %}
+<section class="section">
+<h2 class="section__title">{{ section.title }}</h2>
+{%- if section.publications %}
+{% assign pubs = site.publications | sort: "date" | reverse %}{% for pub in pubs %}{% include pub-entry.html pub=pub %}{% endfor %}
+<p class="note">* Equal contribution</p>
+{%- elsif section.tags %}
+<ul class="tags">{% for tag in section.tags %}<li>{{ tag }}</li>{% endfor %}</ul>
+{%- else %}
+{%- for item in section.items %}
+<div class="entry">
+<p class="entry__when">{{ item.when }}{% if item.when_note %}<span>{{ item.when_note }}</span>{% endif %}</p>
+<div>
+<p class="entry__what">{{ item.what }}</p>
+{%- if item.where %}
+<p class="entry__where">{{ item.where }}</p>
+{%- endif %}
+{%- if item.notes %}
+<ul class="entry__notes">{% for note in item.notes %}<li>{{ note | markdownify | remove: "<p>" | remove: "</p>" | strip }}</li>{% endfor %}</ul>
+{%- endif %}
+</div>
+</div>
+{%- endfor %}
+{%- endif %}
+</section>
+{% endfor %}

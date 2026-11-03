@@ -1,0 +1,68 @@
+---
+---
+{% comment %}
+  The site's own layout: a slim header, one centred column and a footer.
+  Styles live in assets/css/site.css; the colour theme is the data-theme
+  attribute on <html> (the stored choice, else the system setting).
+{% endcomment %}
+{% include base_path %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% include seo.html %}
+<script>
+  (function () {
+    var theme = null;
+    try { theme = localStorage.getItem("theme"); } catch (e) {}
+    if (theme !== "dark" && theme !== "light") {
+      theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<link rel="stylesheet" href="{{ base_path }}/assets/css/site.css?v={{ site.time | date: "%s" }}">
+<link rel="alternate" type="application/atom+xml" href="{{ base_path }}/feed.xml" title="{{ site.title }}">
+<link rel="icon" type="image/svg+xml" href="{{ base_path }}/images/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ base_path }}/images/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ base_path }}/images/apple-touch-icon-180x180.png">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    {% unless page.url == "/" %}<a class="site-header__brand" href="{{ base_path }}/">{{ site.author.name }}</a>{% endunless %}
+    <nav class="site-nav" aria-label="Main">
+      {% for link in site.data.navigation.main %}<a href="{{ base_path }}{{ link.url }}"{% if page.url == link.url %} aria-current="page"{% endif %}>{{ link.title }}</a>{% endfor %}
+      <button class="theme-toggle" type="button" aria-label="Switch between light and dark mode">{% include icon.html name="moon" %}{% include icon.html name="sun" %}</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+{{ content }}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap"><p class="site-footer__inner">Last updated {{ "now" | date: "%B %Y" }}</p></div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var media = window.matchMedia("(prefers-color-scheme: dark)");
+    document.querySelector(".theme-toggle").addEventListener("click", function () {
+      var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
+    });
+    // follow the system setting until the visitor picks a theme
+    media.addEventListener("change", function (e) {
+      var stored = null;
+      try { stored = localStorage.getItem("theme"); } catch (err) {}
+      if (!stored) root.setAttribute("data-theme", e.matches ? "dark" : "light");
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+# CV sections, rendered in this order by _pages/cv.html.
+# An item has `when`, `what`, optional `where`, `when_note` and `notes` (Markdown).
+# `publications: true` lists the publications collection; `tags` shows short labels.
+
+- title: Education
+  items:
+    - when: Aug 2026 – May 2030
+      when_note: expected
+      what: Ph.D. in Operations Research
+      where: Columbia University, New York, NY
+      notes:
+        - "Advisors: [Prof. Henry Lam](https://www.columbia.edu/~khl2114/) and [Prof. Adam Block](https://abblock.github.io/)"
+    - when: Sep 2022 – Jun 2026
+      what: B.S. in Mathematics and Applied Mathematics
+      where: Fudan University, Shanghai, China
+
+- title: Publications
+  publications: true
+
+- title: Work experience
+  items:
+    - when: Jan 2026 – Jul 2026
+      what: Quant Researcher
+      where: Century Frontier Asset Management
+      notes:
+        - "Diffusion- and flow-based models for intraday return prediction"
+
+- title: Research experience
+  items:
+    - when: Oct 2025 – Jan 2026
+      what: Research Assistant
+      where: Northwestern University, Evanston, IL
+      notes:
+        - "Unbiased inference-time guidance for diffusion models: Sequential Monte Carlo with Girsanov path weights"
+        - "Supervisor: [Prof. Yiping Lu](https://2prime.github.io/)"
+    - when: Feb 2025 – Mar 2026
+      what: Research Assistant
+      where: Northwestern University, Evanston, IL
+      notes:
+        - "Higher-order kernel smoothing and diffusion maps on manifolds; convergence of graph Laplacian eigenvalues and eigenvectors"
+        - "Supervisor: [Prof. Yiping Lu](https://2prime.github.io/)"
+    - when: Feb 2025 – Jul 2025
+      what: Research Assistant
+      where: Columbia University, New York, NY
+      notes:
+        - "Time-singular decomposition of the score function in diffusion models"
+        - "Supervisor: [Prof. Kaizheng Wang](https://kw2934.github.io/)"
+
+- title: Skills
+  tags: [Python, C/C++, MATLAB, LaTeX]
+
+- title: Hobbies
+  tags: [Football, History, Travelling]
