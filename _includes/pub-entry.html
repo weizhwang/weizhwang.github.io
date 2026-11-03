@@ -1,0 +1,19 @@
+{% comment %}
+  One publication: venue tag, title, authors and links.
+  Usage: {% include pub-entry.html pub=publication %}
+{% endcomment %}
+{% assign pub = include.pub %}
+{% assign href = pub.arxivurl | default: pub.paperurl %}
+{% unless href %}{% assign href = pub.url | relative_url %}{% endunless %}
+<div class="pub">
+  <div class="pub__venue">{% if pub.venue_short %}{{ pub.venue_short }}{% else %}{{ pub.date | date: "%Y" }}{% endif %}</div>
+  <div class="pub__body">
+    <a class="pub__title" href="{{ href }}">{{ pub.title }}</a>
+    {% if pub.authors %}<div class="pub__authors">{{ pub.authors }}</div>{% endif %}
+    <div class="pub__links">
+      {% if pub.arxivurl %}<a href="{{ pub.arxivurl }}">arXiv</a>{% endif %}
+      {% if pub.paperurl %}<a href="{{ pub.paperurl }}">PDF</a>{% endif %}
+      {% if pub.bibtexurl %}<a href="{{ pub.bibtexurl | relative_url }}">BibTeX</a>{% endif %}
+    </div>
+  </div>
+</div>
